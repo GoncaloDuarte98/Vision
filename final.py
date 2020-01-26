@@ -1,15 +1,23 @@
 import imutils
+import argparse
 import numpy as np
 import cv2
 
+use_param = 0;
+show_photo = 1;
 
+
+def list_add(i):
+    gummy_list[i - 1] = gummy_list[i - 1] + 1
+
+
+def show_results():
+    for i in range(1, 16):
+        print(i, " : ", gummy_list[i - 1])
 
 
 def red_mask_2_countours(mask):
-
     img = mask.copy()
-
-
 
     thresh = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 5)
 
@@ -24,32 +32,32 @@ def red_mask_2_countours(mask):
         (x, y), (width, height), angle = cv2.minAreaRect(c)
         biggest_size = max(width, height)
 
-        if len(c)>5:
+        if len(c) > 5:
             ellipse = cv2.fitEllipse(c)
             (center, axes, orientation) = ellipse
             majoraxis_length = max(axes)
             minoraxis_length = min(axes)
             eccentricity = (np.sqrt(1 - (minoraxis_length / majoraxis_length) ** 2))
-            if area>500:
+            if area > 500:
                 if eccentricity < 0.7:
                     cv2.ellipse(original, ellipse, (0, 0, 255), 2)
+                    list_add(7)
                 else:
                     cv2.drawContours(original, [box], 0, (0, 0, 255), 2)
+                    list_add(1)
 
         else:
-            if area>500:
+            if area > 500:
                 cv2.drawContours(original, [box], 0, (0, 0, 255), 2)
+                list_add(1)
 
+    # cv2.imshow("red MASK", original)
+    # cv2.imshow("img", mask)
+    # cv2.waitKey()
 
-    #cv2.imshow("red MASK", original)
-    #cv2.imshow("img", mask)
-    #cv2.waitKey()
 
 def dark_red_mask_2_countours(mask):
-
     img = mask.copy()
-
-
 
     thresh = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 5)
 
@@ -63,45 +71,46 @@ def dark_red_mask_2_countours(mask):
         area = cv2.contourArea(box)
         (x, y), (width, height), angle = cv2.minAreaRect(c)
 
-
         biggest_size = max(width, height)
 
-        if len(c)>5:
+        if len(c) > 5:
             ellipse = cv2.fitEllipse(c)
             (center, axes, orientation) = ellipse
             majoraxis_length = max(axes)
             minoraxis_length = min(axes)
             eccentricity = (np.sqrt(1 - (minoraxis_length / majoraxis_length) ** 2))
-            if area>320 :
+            if area > 320:
                 if eccentricity < 0.7:
                     cv2.ellipse(original, ellipse, (128, 0, 128), 2)
+                    list_add(8)
                 else:
                     if biggest_size > 50:
                         cv2.drawContours(original, [c], 0, (128, 0, 128), 3)
                         cv2.drawContours(original, [c], 0, (128, 0, 128), -1)
+                        list_add(15)
                     else:
-                        #cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
+                        # cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
                         cv2.drawContours(original, [box], 0, (128, 0, 128), 2)
+                        list_add(2)
 
         else:
-            if area>320:
-                if biggest_size >50 :
+            if area > 320:
+                if biggest_size > 50:
                     cv2.drawContours(original, [c], 0, (128, 0, 128), 3)
                     cv2.drawContours(original, [c], 0, (128, 0, 128), -1)
+                    list_add(15)
                 else:
                     cv2.drawContours(original, [box], 0, (128, 0, 128), 2)
-                    #cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
+                    list_add(2)
+                    # cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
 
+    # cv2.imshow("red MASK", original)
+    # cv2.imshow("img", mask)
+    # cv2.waitKey()
 
-    #cv2.imshow("red MASK", original)
-    #cv2.imshow("img", mask)
-    #cv2.waitKey()
 
 def green_mask_2_countours(mask):
-
     img = mask.copy()
-
-
 
     thresh = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 5)
 
@@ -115,45 +124,46 @@ def green_mask_2_countours(mask):
         area = cv2.contourArea(box)
         (x, y), (width, height), angle = cv2.minAreaRect(c)
 
-
         biggest_size = max(width, height)
 
-        if len(c)>5:
+        if len(c) > 5:
             ellipse = cv2.fitEllipse(c)
             (center, axes, orientation) = ellipse
             majoraxis_length = max(axes)
             minoraxis_length = min(axes)
             eccentricity = (np.sqrt(1 - (minoraxis_length / majoraxis_length) ** 2))
-            if area>320 :
+            if area > 320:
                 if eccentricity < 0.7:
                     cv2.ellipse(original, ellipse, (0, 255, 0), 2)
+                    list_add(10)
                 else:
                     if biggest_size > 58:
                         cv2.drawContours(original, [c], 0, (0, 255, 0), 3)
                         cv2.drawContours(original, [c], 0, (0, 255, 0), -1)
+                        list_add(13)
                     else:
-                        #cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
+                        # cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
                         cv2.drawContours(original, [box], 0, (0, 255, 0), 2)
+                        list_add(4)
 
         else:
-            if area>320:
-                if biggest_size >58 :
-                    cv2.drawContours(original, [c], 0, (0, 255,0), 3)
-                    cv2.drawContours(original, [c], 0, (0,255,0), -1)
+            if area > 320:
+                if biggest_size > 58:
+                    cv2.drawContours(original, [c], 0, (0, 255, 0), 3)
+                    cv2.drawContours(original, [c], 0, (0, 255, 0), -1)
+                    list_add(13)
                 else:
                     cv2.drawContours(original, [box], 0, (128, 0, 128), 2)
-                    #cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
+                    list_add(4)
+                    # cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
 
+    # cv2.imshow("red MASK", original)
+    # cv2.imshow("img", mask)
+    # cv2.waitKey()
 
-    #cv2.imshow("red MASK", original)
-    #cv2.imshow("img", mask)
-    #cv2.waitKey()
 
 def orange_mask_2_countours(mask):
-
     img = mask.copy()
-
-
 
     thresh = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 5)
 
@@ -167,45 +177,46 @@ def orange_mask_2_countours(mask):
         area = cv2.contourArea(box)
         (x, y), (width, height), angle = cv2.minAreaRect(c)
 
-
         biggest_size = max(width, height)
 
-        if len(c)>5:
+        if len(c) > 5:
             ellipse = cv2.fitEllipse(c)
             (center, axes, orientation) = ellipse
             majoraxis_length = max(axes)
             minoraxis_length = min(axes)
             eccentricity = (np.sqrt(1 - (minoraxis_length / majoraxis_length) ** 2))
-            if area>550 :
+            if area > 550:
                 if eccentricity < 0.7:
-                    cv2.ellipse(original, ellipse, (0,140,255), 2)
+                    cv2.ellipse(original, ellipse, (0, 140, 255), 2)
+                    list_add(9)
                 else:
                     if biggest_size > 50:
-                        cv2.drawContours(original, [c], 0, (0,140,255), 3)
-                        cv2.drawContours(original, [c], 0, (0,140,255), -1)
+                        cv2.drawContours(original, [c], 0, (0, 140, 255), 3)
+                        cv2.drawContours(original, [c], 0, (0, 140, 255), -1)
+                        list_add(14)
                     else:
-                        #cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
-                        cv2.drawContours(original, [box], 0, (0,140,255), 2)
+                        # cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
+                        cv2.drawContours(original, [box], 0, (0, 140, 255), 2)
+                        list_add(3)
 
         else:
-            if area>550:
-                if biggest_size >50 :
-                    cv2.drawContours(original, [c], 0, (0,140,255), 3)
-                    cv2.drawContours(original, [c], 0, (0,140,255), -1)
+            if area > 550:
+                if biggest_size > 50:
+                    cv2.drawContours(original, [c], 0, (0, 140, 255), 3)
+                    cv2.drawContours(original, [c], 0, (0, 140, 255), -1)
+                    list_add(14)
                 else:
-                    cv2.drawContours(original, [box], 0, (0,140,255), 2)
-                    #cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
+                    cv2.drawContours(original, [box], 0, (0, 140, 255), 2)
+                    list_add(3)
+                    # cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
 
+    # cv2.imshow("red MASK", original)
+    # cv2.imshow("img", mask)
+    # cv2.waitKey()
 
-    #cv2.imshow("red MASK", original)
-    #cv2.imshow("img", mask)
-    #cv2.waitKey()
 
 def yellow_mask_2_countours(mask):
-
     img = mask.copy()
-
-
 
     thresh = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 5)
 
@@ -219,51 +230,47 @@ def yellow_mask_2_countours(mask):
         area = cv2.contourArea(box)
         (x, y), (width, height), angle = cv2.minAreaRect(c)
 
-
         biggest_size = max(width, height)
 
-        if len(c)>5:
+        if len(c) > 5:
             ellipse = cv2.fitEllipse(c)
             (center, axes, orientation) = ellipse
             majoraxis_length = max(axes)
             minoraxis_length = min(axes)
             eccentricity = (np.sqrt(1 - (minoraxis_length / majoraxis_length) ** 2))
-            if area>320 :
+            if area > 320:
                 if eccentricity < 0.7:
                     cv2.ellipse(original, ellipse, (0, 255, 255), 2)
+                    list_add(11)
                 else:
                     if biggest_size < 50:
-                        #cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
-                        cv2.drawContours(original, [box], 0, (0,255,255), 2)
+                        # cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
+                        cv2.drawContours(original, [box], 0, (0, 255, 255), 2)
+                        list_add(5)
 
         else:
-            if area>320:
-                if biggest_size <50 :
+            if area > 320:
+                if biggest_size < 50:
                     cv2.drawContours(original, [box], 0, (0, 255, 255), 2)
-                    #cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
-
-
-    cv2.imshow("red MASK", original)
-    cv2.imshow("img", mask)
-    cv2.waitKey()
-
-
-
+                    list_add(5)
+                    # cv2.putText(original, str(round(biggest_size, 2)), (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, 0, 1)
+    # cv2.imshow("red MASK", original)
+    # cv2.imshow("img", mask)
+    # cv2.waitKey()
 
 
 def Color_Selection(image):
     img = image.copy()
-    img = cv2.bilateralFilter(img,60,75,75)
-    #img=cv2.GaussianBlur(img, (5, 5), 0)
+    img = cv2.bilateralFilter(img, 45, 75, 75)
+    # img=cv2.GaussianBlur(img, (5, 5), 0)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-    kernel = np.ones((5,5), np.uint8)
+    kernel = np.ones((5, 5), np.uint8)
 
     # RED MASK                                                                  -
     red_mask = cv2.inRange(hsv, np.array([0, 120, 20]), np.array([5, 255, 255]))
     red_mask = cv2.morphologyEx(red_mask, cv2.MORPH_OPEN, kernel)
-    #red_mask = cv2.morphologyEx(red_mask, cv2.MORPH_CLOSE, kernel)
-
+    # red_mask = cv2.morphologyEx(red_mask, cv2.MORPH_CLOSE, kernel)
 
     red_mask = imutils.resize(red_mask, height=700)
     red_mask_2_countours(red_mask)
@@ -271,7 +278,7 @@ def Color_Selection(image):
     # DARK RED MASK                                                             -
     dark_red_mask = cv2.inRange(hsv, np.array([169, 160, 20]), np.array([179, 255, 255]))
     dar_red_mask = cv2.morphologyEx(dark_red_mask, cv2.MORPH_OPEN, kernel)
-    dark_red_mask = cv2.erode(dark_red_mask,kernel,iterations = 1)
+    dark_red_mask = cv2.erode(dark_red_mask, kernel, iterations=1)
 
     dark_red_mask = imutils.resize(dark_red_mask, height=700)
     dark_red_mask_2_countours(dark_red_mask)
@@ -279,52 +286,49 @@ def Color_Selection(image):
     # GREEN MASK                                                                -
     green_mask = cv2.inRange(hsv, np.array([33, 92, 20]), np.array([63, 255, 255]))
     green_mask = cv2.morphologyEx(green_mask, cv2.MORPH_OPEN, kernel)
-    green_mask = cv2.dilate(green_mask,kernel,iterations = 1)
+    green_mask = cv2.dilate(green_mask, kernel, iterations=1)
 
-    green_mask = imutils.resize(green_mask ,height=700)
+    green_mask = imutils.resize(green_mask, height=700)
     green_mask_2_countours(green_mask)
 
     # ORANGE MASK                                                                -
     orange_mask = cv2.inRange(hsv, np.array([10, 120, 20]), np.array([20, 255, 255]))
     orange_mask = cv2.morphologyEx(orange_mask, cv2.MORPH_OPEN, kernel)
-    orange_mask = cv2.dilate(orange_mask,kernel,iterations = 1)
-    orange_mask = cv2.erode(orange_mask,kernel,iterations = 1)
-
+    orange_mask = cv2.dilate(orange_mask, kernel, iterations=1)
+    orange_mask = cv2.erode(orange_mask, kernel, iterations=1)
 
     orange_mask = imutils.resize(orange_mask, height=700)
     orange_mask_2_countours(orange_mask)
 
-
-
     # YELLOW MASK                                                                  -
     yellow_mask = cv2.inRange(hsv, np.array([20, 110, 20]), np.array([30, 255, 255]))
     yellow_mask = cv2.morphologyEx(yellow_mask, cv2.MORPH_OPEN, kernel)
-    #red_mask = cv2.morphologyEx(red_mask, cv2.MORPH_CLOSE, kernel)
-
+    # red_mask = cv2.morphologyEx(red_mask, cv2.MORPH_CLOSE, kernel)
 
     yellow_mask = imutils.resize(yellow_mask, height=700)
     yellow_mask_2_countours(yellow_mask)
 
 
-
-    img = imutils.resize(img, height=700)
-    #cv2.imshow("img", original)
-    #cv2.imshow("mask", green_mask)
-    #cv2.waitKey()
-
-
 def main():
     print("hello world")
-    for x in range(46):
-        image_name = "image_" + str(x) + ".jpg"
-        global image
-        global original
 
+    global gummy_list
+    global image
+    global original
+
+    gummy_list = []
+    for i in range(1, 16):
+        gummy_list.append(0)
+
+    if use_param == 1:
+        parser = argparse.ArgumentParser()
+        parser.add_argument('input_img', help='the input image file')
+        args = parser.parse_args()
+        image_name = args.input_img
 
         image = cv2.imread(image_name, 1)
 
         height, width, channels = image.shape
-
 
         if height > width:
             image = imutils.rotate_bound(image, 90)
@@ -332,9 +336,37 @@ def main():
         image = imutils.resize(image, height=1000)
 
         original = imutils.resize(image.copy(), height=700)
-        print(image_name)
+        print(image_name, " :")
         Color_Selection(image)
 
+        show_results()
+        if show_photo == 1:
+            cv2.imshow("ProcessedImage", original)
+            cv2.waitKey()
+
+    else:
+        for x in range(46):
+            image_name = "image_" + str(x) + ".jpg"
+            for i in range(1, 16):
+                gummy_list[i - 1] = 0
+
+            image = cv2.imread(image_name, 1)
+
+            height, width, channels = image.shape
+
+            if height > width:
+                image = imutils.rotate_bound(image, 90)
+
+            image = imutils.resize(image, height=1000)
+
+            original = imutils.resize(image.copy(), height=700)
+            print(image_name, " :")
+            Color_Selection(image)
+
+            show_results()
+            if show_photo == 1:
+                cv2.imshow("ProcessedImage", original)
+                cv2.waitKey()
 
 
 if __name__ == "__main__":
