@@ -3,7 +3,7 @@ import argparse
 import numpy as np
 import cv2
 
-use_param = 0;
+use_param = 1;
 show_photo = 1;
 
 
